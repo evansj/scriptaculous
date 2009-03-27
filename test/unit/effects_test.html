@@ -17,7 +17,10 @@
       background: #fed;
       padding: 1em;
       width: 400px;
-    } 
+    }
+    #hl1, #hl2 {
+        background-color: #fff;
+    }
     .final {
       color: #fff;
       font-style: italic;
@@ -60,6 +63,9 @@
 <div id="rotfl">ROTFL</div>
 
 <div id="tween">foo!</div>
+
+<div id="hl1">Highlight</div>
+<div id="hl2">Highlight</div>
 
 <!-- Tests follow -->
 <script type="text/javascript" language="javascript" charset="utf-8">
@@ -472,6 +478,29 @@
         assertEqual('30px', $('rotfl').getStyle('font-size'));
       });
     }},
+
+    testEffectHighlightWithNullRestoreColor: function() { with(this) {
+      // Render the effect, at the end there should be no background-color
+      // style set because restorecolor is null. Even though the element
+      // started off with a red background explicitly set.
+      $('hl1').setStyle({'background-color': '#ff0000'});
+      new Effect.Highlight('hl1', {restorecolor:null});
+
+      wait(1100,function(){
+          assertEqual("", $('hl1').style.backgroundColor);
+      });
+    }},
+
+    testEffectHighlightWithNoRestoreColor: function() { with(this) {
+      // this time, pass no restorecolor. Now the final color will explicitly be
+      // the color of the element when the effect started (in this case red)
+      $('hl2').setStyle({'background-color': '#ff0000'});
+      new Effect.Highlight('hl2',  {startcolor: '#00ff00', endcolor: '#0000ff'});
+      wait(1100,function(){
+          assertEqual('rgb(255, 0, 0)', $('hl2').style.backgroundColor);
+      });
+    }},
+
 
     testTransformMultiple: function() { with(this) {
       var transformation = new Effect.Transform([
